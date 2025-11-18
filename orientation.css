@@ -1,0 +1,27 @@
+/* ----- スマホ縦向き禁止（黒画面） ----- */
+
+#rotateWarning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  color: white;
+  font-size: 28px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 9999;
+}
+
+/* 縦向きのときだけ強制表示 */
+@media screen and (orientation: portrait) {
+  body * {
+    display: none !important;
+  }
+  #rotateWarning {
+    display: flex !important;
+  }
+}
