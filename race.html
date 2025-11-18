@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Dog Race</title>
-  <link rel="stylesheet" href="race.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>Dog Race</title>
+
+<link rel="stylesheet" href="race.css">
+<link rel="stylesheet" href="orientation.css"> <!-- ★ 追加 -->
+
 </head>
 <body>
 
+<div id="rotateWarning">スマホを横向きにしてください</div>
+
 <div id="raceContainer">
-  <!-- トラック -->
+  
   <img id="track" src="track/track_background.png">
-  <!-- 犬 -->
   <img id="dog" src="">
 
-  <!-- グレーオーバーレイ + Tap to Start 文字 -->
   <div id="overlay">
     <div id="tapText">Tap to Start</div>
   </div>
 
-  <!-- カウントダウン -->
   <div id="countdown">3</div>
-
-  <!-- タイマー -->
   <div id="timer">0.00 s</div>
 
-  <!-- TAPボタン（最初は非表示） -->
   <button id="tapButton">TAP</button>
 </div>
 
