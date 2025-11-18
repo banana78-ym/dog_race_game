@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirm Your Dog</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .dog-preview {
+    margin-top: 20px;
+  }
+  .dog-preview img {
+    width: 200px; /* スマホ横画面向けに適度なサイズ */
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<h1>Confirm Your Dog</h1>
+
+<div class="dog-preview">
+  <img id="dogImage" src="" alt="Selected Dog">
+  <p id="dogName" style="text-align:center;font-size:18px;margin-top:10px;"></p>
+</div>
+
+<div class="buttons">
+  <button id="backBtn">Back</button>
+  <button id="startBtn">Game Start</button>
+</div>
+
+<script>
+const dogImage = document.getElementById('dogImage');
+const dogNameText = document.getElementById('dogName');
+
+const selectedDog = localStorage.getItem("selectedDog");
+const dogName = localStorage.getItem("dogName");
+
+if(!selectedDog || !dogName){
+  // データがなければ選択画面に戻す
+  window.location.href = "dog_select.html";
+} else {
+  dogImage.src = `dogs/${selectedDog}`;
+  dogNameText.textContent = dogName;
+}
+
+document.getElementById('backBtn').addEventListener('click', () => {
+  window.location.href = "dog_select.html";
+});
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  window.location.href = "race.html";
+});
+</script>
+</body>
+</html>

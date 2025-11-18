@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background: white;
+}
+
+#raceContainer {
+  position: relative;
+  width: 100vw;
+  height: 200px;
+  overflow: hidden;
+  background: white;
+}
+
+/* トラック画像 */
+#track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 200px;
+  width: auto;
+  transform-origin: left top;
+  transform: scaleX(1.5); /* スタート付近だけ見える */
+}
+
+/* 犬画像 */
+#dog {
+  position: absolute;
+  bottom: 15px;
+  left: 20px;
+  height: 80px;
+  width: auto;
+}
+
+/* グレーオーバーレイ */
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5); /* 半透明グレー */
+  z-index: 10;
+}
+
+/* Tap to Start 文字 */
+#tapText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  z-index: 20; /* overlay 内で文字は前面 */
+}
+
+/* カウントダウン */
+#countdown {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  font-weight: bold;
+  display: none;
+  z-index: 20;
+}
+
+/* タイマー */
+#timer {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  z-index: 20;
+}
+
+/* TAPボタン */
+#tapButton {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 15px 20px;
+  border-radius: 50%;
+  font-size: 20px;
+  display: none; /* 最初は非表示 */
+  z-index: 20;
+}

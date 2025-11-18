@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Your Dog</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .dog-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .dog-grid img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border 0.2s;
+  }
+  .dog-grid img.selected {
+    border: 3px solid red;
+  }
+  .name-next {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  input[type="text"] {
+    padding: 5px;
+    font-size: 16px;
+  }
+  button {
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<h1>Select Your Dog</h1>
+
+<div class="dog-grid" id="dogGrid">
+  <!-- 画像をJSで挿入 -->
+</div>
+
+<div class="name-next">
+  <input type="text" id="dogName" placeholder="Enter Name">
+  <button id="nextBtn">Next</button>
+</div>
+
+<script>
+const dogGrid = document.getElementById('dogGrid');
+const nextBtn = document.getElementById('nextBtn');
+let selectedDog = null;
+
+// 配列でdog画像を行ごとに分ける
+const dogs = [
+  ["dog1.png","dog2.png","dog3.png","dog4.png"],
+  ["dog5.png","dog6.png","dog7.png","dog8.png"],
+  ["dog9.png","dog10.png","dog11.png"]
+];
+
+// 表示
+dogs.forEach(row => {
+  row.forEach(dog => {
+    const img = document.createElement('img');
+    img.src = `dogs/${dog}`;
+    img.addEventListener('click', () => {
+      document.querySelectorAll('.dog-grid img').forEach(i => i.classList.remove('selected'));
+      img.classList.add('selected');
+      selectedDog = dog;
+    });
+    dogGrid.appendChild(img);
+  });
+});
+
+nextBtn.addEventListener('click', () => {
+  const name = document.getElementById('dogName').value.trim();
+  if(!selectedDog) {
+    alert("犬を選んでください");
+    return;
+  }
+  if(!name) {
+    alert("名前を入力してください");
+    return;
+  }
+  // 選択データをlocalStorageに保存して確認画面に遷移
+  localStorage.setItem("selectedDog", selectedDog);
+  localStorage.setItem("dogName", name);
+  window.location.href = "dog_confirm.html";
+});
+</script>
+</body>
+</html>
