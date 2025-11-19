@@ -11,10 +11,17 @@ let trackSpeed = 5;
 let goalPosition = 0;
 
 track.onload = () => {
-    trackWidth = track.naturalWidth;
-
+    // 画面幅（スマホ横画面の幅）
     const containerWidth = document.getElementById("raceContainer").clientWidth;
+
+    // ★ 表示されているトラック画像の横幅（200%表示のため2倍）
+    trackWidth = containerWidth * 2;
+
+    // ★ ゴール位置（トラック右端が画面右端に来た瞬間）
     goalPosition = containerWidth - trackWidth;
+
+    console.log("Visible Track Width:", trackWidth);
+    console.log("Goal Position:", goalPosition);
 };
 
 // ---------------- 犬移動 ----------------
@@ -25,7 +32,8 @@ let dogSpeed = 5;
 const tapButton = document.getElementById("tapButton");
 let canTap = false;
 
-tapButton.addEventListener("click", () => {
+tapButton.addEventListener("click", (e) => {
+    e.preventDefault(); // ★ 連打時の拡大防止
     if (!canTap) return;
 
     dogX += dogSpeed;
@@ -48,11 +56,13 @@ setInterval(() => {
     }
 }, 10);
 
-// ---------------- ゴール判定 ----------------
+// ---------------- ゴール判定（修正済） ----------------
 function checkGoal() {
     if (trackWidth === 0) return;
 
     const containerWidth = document.getElementById("raceContainer").clientWidth;
+
+    // ★ ゴール位置をスマホ画面に合わせて再計算
     goalPosition = containerWidth - trackWidth;
 
     if (trackX <= goalPosition) {
@@ -63,38 +73,39 @@ function checkGoal() {
     }
 }
 
-// ---------------- Tap to Start（overlayクリック） ----------------
-const overlay = document.getElementById("overlay");
+// ---------------- 画面タップでカウントダウン開始 ----------------
 const countdown = document.getElementById("countdown");
-let started = false;
+const overlay = document.getElementById("overlay");
+let screenTapped = false;
 
-overlay.onclick = () => {
-  if (started) return;
-  started = true;
+document.getElementById("raceContainer").addEventListener("click", () => {
+    if (screenTapped) return;
+    screenTapped = true;
 
-  // overlay（グレーと文字）を消す
-  overlay.style.display = "none";
+    // ★「Tap to Start」文字とグレー背景を消す
+    document.getElementById("tapText").style.display = "none";
+    overlay.style.display = "none";
 
-  // カウントダウン開始
-  countdown.style.display = "block";
-  tapButton.style.display = "block";
-  canTap = false;
+    // カウントダウン表示（TAPボタンは表示だけするが押せない）
+    countdown.style.display = "block";
+    tapButton.style.display = "block";
+    canTap = false;
 
-  let count = 3;
-  countdown.textContent = count;
+    let count = 3;
+    countdown.textContent = count;
 
-  const interval = setInterval(() => {
-      count--;
-      if (count > 0) {
-          countdown.textContent = count;
-      } else {
-          countdown.textContent = "GO!";
-          setTimeout(() => {
-              countdown.style.display = "none";
-              canTap = true;
-              timerRunning = true;
-          }, 500);
-          clearInterval(interval);
-      }
-  }, 1000);
-};
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdown.textContent = count;
+        } else {
+            countdown.textContent = "GO!";
+            setTimeout(() => {
+                countdown.style.display = "none";
+                canTap = true;       // TAPボタン押せる
+                timerRunning = true; // タイマー開始
+            }, 500);
+            clearInterval(interval);
+        }
+    }, 1000);
+});
