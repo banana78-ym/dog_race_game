@@ -3,54 +3,58 @@ const selectedDog = localStorage.getItem("selectedDog") || "dog1.png";
 const dog = document.getElementById("dog");
 dog.src = "dogs/" + selectedDog;
 
-// ---------------- トラック ----------------
+// 犬は左固定
+let dogX = 30;
+dog.style.left = dogX + "px";
+
+// ---------------- トラック（背景） ----------------
 const track = document.getElementById("track");
+
 let trackX = 0;
 let trackWidth = 0;
-let trackSpeed = 8;
+let containerWidth = 0;
 
-// 犬
-let dogX = 20;
-let dogSpeed = 14;
+let trackSpeed = 14;   // ← 犬より速く背景が動くように
+let dogRunSpeed = 12;  // ← 犬の1タップ移動量
 
-// 背景停止フラグ
 let backgroundStopped = false;
+let trueGoalX = 0;
 
-// ゴール位置 (画像端が画面右端に届く位置)
-let goalPosition = 0;
-
+// 画像読み込み後に幅取得
 track.onload = () => {
     trackWidth = track.naturalWidth;
+    containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    const containerWidth = document.getElementById("raceContainer").clientWidth;
-
-    // 画像右端が画面右端に一致した瞬間の位置
-    goalPosition = -(trackWidth - containerWidth);
+    // ゴールライン（黒白）が画面右端に来る位置
+    trueGoalX = trackWidth - containerWidth;  
 };
 
 
-// ---------------- TAPボタン ----------------
+// ---------------- TAP ----------------
 const tapButton = document.getElementById("tapButton");
 let canTap = false;
-
 
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
-    // 犬は常に動く
-    dogX += dogSpeed;
-    dog.style.left = dogX + "px";
-
-    // 背景スクロール（ゴールラインが見えるまで）
+    // 1) まず背景スクロール（ゴールラインが見えるまで）
     if (!backgroundStopped) {
+
         trackX -= trackSpeed;
 
-        if (trackX <= goalPosition) {
-            trackX = goalPosition;
+        // ゴールラインが画面に見える位置まで来たら止める
+        if (-trackX >= trueGoalX) {
+            trackX = -trueGoalX;
             backgroundStopped = true;
         }
 
         track.style.left = trackX + "px";
+    }
+
+    // 2) その後だけ犬を右へ走らせる（画面内で）
+    else {
+        dogX += dogRunSpeed;
+        dog.style.left = dogX + "px";
     }
 
     checkGoal();
@@ -63,29 +67,26 @@ let timerRunning = false;
 
 setInterval(() => {
     if (timerRunning) {
-        time += 0.01;
-        document.getElementById("timer").textContent = time.toFixed(2) + " s";
+        time += 0.1;
+        document.getElementById("timer").textContent = time.toFixed(1) + " s";
     }
-}, 10);
+}, 100);
 
 
 // ---------------- ゴール判定 ----------------
 function checkGoal() {
+    if (!backgroundStopped) return;
 
-    const dogRight = dogX + dog.clientWidth;
-    const containerWidth = document.getElementById("raceContainer").clientWidth;
-
-    // ゴールラインが画面右に見えている前提
-    // 犬がそこを超えたらゴール
-    if (backgroundStopped && dogRight >= containerWidth - 10) {
+    // 犬がゴールラインを通過したらゴール
+    if (dogX >= containerWidth - 70) {
         timerRunning = false;
         canTap = false;
-        alert("GOAL!! Time: " + time.toFixed(2) + " s");
+        alert("GOAL!!! Time: " + time.toFixed(1) + " s");
     }
 }
 
 
-// ---------------- Tap to Start カウントダウン ----------------
+// ---------------- Tap to Start ----------------
 const countdown = document.getElementById("countdown");
 let screenTapped = false;
 
@@ -93,8 +94,10 @@ function startCountdown() {
     if (screenTapped) return;
     screenTapped = true;
 
-    // グレーの overlay と文字を消す
-    document.getElementById("overlay").style.display = "none";
+    // overlayを確実に消す
+    const overlay = document.getElementById("overlay");
+    overlay.style.display = "none";
+    overlay.style.pointerEvents = "none";
 
     countdown.style.display = "block";
     tapButton.style.display = "block";
@@ -119,7 +122,5 @@ function startCountdown() {
     }, 1000);
 }
 
-
-// overlay と container 両方でスタート可能にする
 document.getElementById("overlay").addEventListener("click", startCountdown);
 document.getElementById("raceContainer").addEventListener("click", startCountdown);
