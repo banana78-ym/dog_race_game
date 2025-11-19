@@ -5,67 +5,52 @@ dog.src = "dogs/" + selectedDog;
 
 // ---------------- トラック設定 ----------------
 const track = document.getElementById("track");
-const raceContainer = document.getElementById("raceContainer");
-
 let trackX = 0;
 let trackWidth = 0;
-let stopPosition = 0;
-let backgroundStopped = false;
 
 // 犬
-let dogX = 0;
-let dogSpeed = 9;  // ← 少しだけ遅く（前よりゆっくり）
+let dogX = 0;            
+let dogSpeed = 12;       
 
 // スクロール速度
 let trackSpeed = 9;
 
-// ★ スクロール停止位置（絶対に変更しない基準値）
+// ★★★★★ 絶対に変えないスクロール停止位置オフセット ★★★★★
 const STOP_OFFSET = -105;
 
-// ★ ゴール判定位置（少し手前に）
-const GOAL_OFFSET = -40;
+// ★ ゴール判定を少し手前にする（ここだけを調整）★
+const GOAL_OFFSET = -80; // ← ここだけ変更（もっと手前にしたいなら -100 など）
 
+// 計算される最終停止位置
+let stopPosition = 0;
 
-// ------------------------------------------------------------
-// 画像ロード後に stopPosition が確実に設定されるようにする
-// ------------------------------------------------------------
-function initTrack() {
+track.onload = () => {
     trackWidth = track.naturalWidth;
+    const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // 読み込めてない場合 → 画像読み込み待ち
-    if (!trackWidth || trackWidth === 0) {
-        setTimeout(initTrack, 50);
-        return;
-    }
-
-    const containerWidth = raceContainer.clientWidth;
-
-    // ゴールラインがちょうど見える位置
+    // ★ 完璧だった停止位置計算式（変更禁止）
     stopPosition = -(trackWidth - containerWidth) + STOP_OFFSET;
-}
-
-track.onload = initTrack;
-initTrack(); // 念のため二重で初期化 → これが stopPosition 未設定バグを防ぐ
-
+};
 
 // ---------------- TAPボタン ----------------
 const tapButton = document.getElementById("tapButton");
 let canTap = false;
+let backgroundStopped = false;
 
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
-    // 犬はスクロール停止後も走り続ける
+    // 犬を右に動かす（スクロール停止後も動く）
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
-    // 背景スクロール（STOP位置まで）
+    // 背景スクロール（STOP_POSITIONまで）
     if (!backgroundStopped) {
         trackX -= trackSpeed;
 
         if (trackX <= stopPosition) {
             trackX = stopPosition;
-            backgroundStopped = true;
+            backgroundStopped = true; 
         }
 
         track.style.left = trackX + "px";
@@ -74,12 +59,10 @@ tapButton.addEventListener("click", () => {
     checkGoal();
 });
 
-
 // ---------------- タイマー ----------------
 let time = 0;
 let timerRunning = false;
 
-// setInterval は1つだけ動かす（タイマーずれ防止）
 setInterval(() => {
     if (timerRunning) {
         time += 0.01;
@@ -87,22 +70,20 @@ setInterval(() => {
     }
 }, 10);
 
-
 // ---------------- ゴール判定 ----------------
 function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
-    const containerWidth = raceContainer.clientWidth;
+    const containerWidth = document.getElementById("raceContainer").clientWidth;
 
+    // ★ ゴール判定を少しだけ手前にする（GOAL_OFFSET を反映）
     const goalLine = containerWidth + GOAL_OFFSET;
 
     if (backgroundStopped && dogRight >= goalLine) {
         timerRunning = false;
         canTap = false;
-
         alert("GOAL!! Time: " + time.toFixed(2) + " s");
     }
 }
-
 
 // ---------------- Tap to Start カウントダウン ----------------
 const countdown = document.getElementById("countdown");
