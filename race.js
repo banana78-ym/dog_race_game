@@ -15,21 +15,20 @@ let dogSpeed = 12;
 // スクロール速度
 let trackSpeed = 9;
 
-// ★★★★★ 絶対に変えないスクロール停止位置オフセット ★★★★★
+// ★★★★★ 絶対に変えないスクロール停止位置 ★★★★★
 const STOP_OFFSET = -105;
 
-// ゴール判定を少し左に手前移動（ここだけ変更）
-const GOAL_OFFSET = -40;
+// ★ ゴール判定だけ早める（-40 → -60 に変更）
+const GOAL_OFFSET = -60;
 
-// 計算される最終停止位置
+// スクロール停止位置
 let stopPosition = 0;
 
 track.onload = () => {
     trackWidth = track.naturalWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // ★ 絶対に完璧だった計算式 + STOP_OFFSET = -105を使用
-    stopPosition = -(trackWidth - containerWidth) + STOP_OFFSET;
+    stopPosition = -(trackWidth - containerWidth) + STOP_OFFSET;  
 };
 
 
@@ -41,17 +40,17 @@ let backgroundStopped = false;
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
-    // 犬を右に動かす（スクロール停止後も動く）
+    // 犬は常に動く
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
-    // 背景スクロール（STOP_POSITIONまで）
+    // 背景スクロール（停止位置まで）
     if (!backgroundStopped) {
         trackX -= trackSpeed;
 
         if (trackX <= stopPosition) {
             trackX = stopPosition;
-            backgroundStopped = true; 
+            backgroundStopped = true;
         }
 
         track.style.left = trackX + "px";
@@ -78,8 +77,8 @@ function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // ★ ゴール判定地点を少し手前へ（GOAL_OFFSET = -40）
-    const goalLine = containerWidth + GOAL_OFFSET;
+    // ★ ここを早めただけ（スクロール停止は触ってない）
+    const goalLine = containerWidth + GOAL_OFFSET;  
 
     if (backgroundStopped && dogRight >= goalLine) {
         timerRunning = false;
