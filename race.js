@@ -29,8 +29,8 @@ function updateTrackMetrics() {
     trackWidth = track.clientWidth || track.naturalWidth;
     containerWidth = raceContainer.clientWidth;
 
-    // 🔥 “あとちょっと” 遅く止める（-65px）
-    stopPosition = containerWidth - trackWidth - 65;
+    // 🔥 いまより 40px だけ遅く止まる（−105px）
+    stopPosition = containerWidth - trackWidth - 105;
 }
 
 if (track.complete) updateTrackMetrics();
