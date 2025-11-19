@@ -13,23 +13,26 @@ let stopPosition = 0;
 
 // 犬
 let dogX = 0;
-// ★ 犬の速度をさらに少し遅く（8）
+// ★ 犬の速度だけ少し遅く（10 → 8）
 let dogSpeed = 8;
 
-// スクロール（変更禁止）
+// スクロール速度（変更禁止）
 let trackSpeed = 9;
 
-// フラグ（変更禁止）
+// スクロール停止フラグ（変更禁止）
 let backgroundStopped = false;
 
-// ---------------- トラック幅からスクロール停止位置算出（変更禁止） ----------------
+// ★★★ 絶対に変更しない STOP_OFFSET（完璧だった値） ★★★
+const STOP_OFFSET = -105;
+
+// ---------------- トラック実寸幅を取得して停止地点を決める（変更禁止） ----------------
 window.addEventListener("load", () => {
   const rect = track.getBoundingClientRect();
   trackDisplayWidth = rect.width;
 
   const containerWidth = raceContainer.clientWidth;
 
-  stopPosition = containerWidth - trackDisplayWidth;
+  stopPosition = containerWidth - trackDisplayWidth + STOP_OFFSET;
 });
 
 // ---------------- TAPボタン ----------------
@@ -39,11 +42,11 @@ let canTap = false;
 tapButton.addEventListener("click", () => {
   if (!canTap) return;
 
-  // 犬を右に移動（スクロール停止後も動く）
+  // 犬は必ず右に進む（スクロール停止後も進み続ける）
   dogX += dogSpeed;
   dog.style.left = dogX + "px";
 
-  // 背景スクロール（停止位置まで）
+  // 背景スクロール（停止位置までは確実に動く）
   if (!backgroundStopped) {
     trackX -= trackSpeed;
 
@@ -58,7 +61,7 @@ tapButton.addEventListener("click", () => {
   checkGoal();
 });
 
-// ---------------- タイマー（正確なリアルタイム計測） ----------------
+// ---------------- タイマー（正確） ----------------
 let time = 0;
 let timerRunning = false;
 let lastTime = null;
@@ -69,14 +72,15 @@ function tickTimer() {
     if (lastTime === null) {
       lastTime = now;
     } else {
-      const deltaSec = (now - lastTime) / 1000;
-      time += deltaSec;
+      const delta = (now - lastTime) / 1000;
+      time += delta;
       lastTime = now;
       document.getElementById("timer").textContent = time.toFixed(2) + " s";
     }
   } else {
     lastTime = null;
   }
+
   requestAnimationFrame(tickTimer);
 }
 requestAnimationFrame(tickTimer);
@@ -102,7 +106,7 @@ function checkGoal() {
   }
 }
 
-// Restart：レースを最初から
+// Restart：レースをリセット
 restartButton.addEventListener("click", () => {
   location.reload();
 });
