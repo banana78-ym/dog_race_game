@@ -9,8 +9,8 @@ let trackX = 0;
 let trackWidth = 0;
 
 // 犬
-let dogX = 0;            
-let dogSpeed = 12;       
+let dogX = 0;
+let dogSpeed = 12;
 
 // スクロール速度
 let trackSpeed = 9;
@@ -18,8 +18,8 @@ let trackSpeed = 9;
 // ★★★★★ 絶対に変えないスクロール停止位置オフセット ★★★★★
 const STOP_OFFSET = -105;
 
-// ★ ゴール判定を少し手前にする（ここだけを調整）★
-const GOAL_OFFSET = -80; // ← ここだけ変更（もっと手前にしたいなら -100 など）
+// ★ ゴール判定をかなり手前に調整（今回の修正点） ★
+const GOAL_OFFSET = -180;
 
 // 計算される最終停止位置
 let stopPosition = 0;
@@ -28,7 +28,6 @@ track.onload = () => {
     trackWidth = track.naturalWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // ★ 完璧だった停止位置計算式（変更禁止）
     stopPosition = -(trackWidth - containerWidth) + STOP_OFFSET;
 };
 
@@ -40,7 +39,7 @@ let backgroundStopped = false;
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
-    // 犬を右に動かす（スクロール停止後も動く）
+    // 犬を右に動かす
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
@@ -50,7 +49,7 @@ tapButton.addEventListener("click", () => {
 
         if (trackX <= stopPosition) {
             trackX = stopPosition;
-            backgroundStopped = true; 
+            backgroundStopped = true;
         }
 
         track.style.left = trackX + "px";
@@ -75,7 +74,7 @@ function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // ★ ゴール判定を少しだけ手前にする（GOAL_OFFSET を反映）
+    // ★ ゴール判定をもっと手前へ（GOAL_OFFSET = -180）
     const goalLine = containerWidth + GOAL_OFFSET;
 
     if (backgroundStopped && dogRight >= goalLine) {
@@ -85,7 +84,7 @@ function checkGoal() {
     }
 }
 
-// ---------------- Tap to Start カウントダウン ----------------
+// ---------------- Tap to Start ----------------
 const countdown = document.getElementById("countdown");
 let screenTapped = false;
 
@@ -120,3 +119,4 @@ function startCountdown() {
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
 document.getElementById("raceContainer").addEventListener("click", startCountdown);
+
