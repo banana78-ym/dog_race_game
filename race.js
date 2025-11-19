@@ -13,19 +13,17 @@ let stopPosition = 0;
 
 // 犬
 let dogX = 0;
-// ★ 犬の速度だけ少し遅く（10 → 8）
 let dogSpeed = 8;
 
-// スクロール速度（変更禁止）
+// スクロール速度
 let trackSpeed = 9;
 
-// スクロール停止フラグ（変更禁止）
+// ★★★★★ スクロール停止位置（変更：-105 → -80）★★★★★
+const STOP_OFFSET = -80;
+
 let backgroundStopped = false;
 
-// ★★★ 絶対に変更しない STOP_OFFSET（完璧だった値） ★★★
-const STOP_OFFSET = -105;
-
-// ---------------- トラック実寸幅を取得して停止地点を決める（変更禁止） ----------------
+// ---------------- トラック実寸幅を取得 ----------------
 window.addEventListener("load", () => {
   const rect = track.getBoundingClientRect();
   trackDisplayWidth = rect.width;
@@ -42,11 +40,11 @@ let canTap = false;
 tapButton.addEventListener("click", () => {
   if (!canTap) return;
 
-  // 犬は必ず右に進む（スクロール停止後も進み続ける）
+  // 犬進む
   dogX += dogSpeed;
   dog.style.left = dogX + "px";
 
-  // 背景スクロール（停止位置までは確実に動く）
+  // 背景スクロール（stopPosition まで）
   if (!backgroundStopped) {
     trackX -= trackSpeed;
 
@@ -61,7 +59,7 @@ tapButton.addEventListener("click", () => {
   checkGoal();
 });
 
-// ---------------- タイマー（正確） ----------------
+// ---------------- タイマー ----------------
 let time = 0;
 let timerRunning = false;
 let lastTime = null;
@@ -85,15 +83,15 @@ function tickTimer() {
 }
 requestAnimationFrame(tickTimer);
 
-// ---------------- Restart ボタン ----------------
+// ---------------- Restart ----------------
 const restartButton = document.getElementById("restartButton");
 
-// ---------------- ゴール判定（変更禁止） ----------------
+// ---------------- ゴール判定 ----------------
 function checkGoal() {
   const containerWidth = raceContainer.clientWidth;
   const dogRight = dogX + dog.clientWidth;
 
-  const GOAL_MARGIN = 20; // 触らない
+  const GOAL_MARGIN = 20;
   const goalLine = containerWidth - GOAL_MARGIN;
 
   if (backgroundStopped && dogRight >= goalLine) {
@@ -106,12 +104,11 @@ function checkGoal() {
   }
 }
 
-// Restart：レースをリセット
 restartButton.addEventListener("click", () => {
   location.reload();
 });
 
-// ---------------- Tap to Start カウントダウン ----------------
+// ---------------- Tap to Start ----------------
 const countdown = document.getElementById("countdown");
 let screenTapped = false;
 
