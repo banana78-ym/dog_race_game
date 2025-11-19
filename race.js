@@ -18,8 +18,8 @@ let trackSpeed = 9;
 // ★★★★★ 絶対に変えないスクロール停止位置オフセット ★★★★★
 const STOP_OFFSET = -105;
 
-// ★ ゴール判定をかなり手前に調整（今回の修正点） ★
-const GOAL_OFFSET = -180;
+// ★ ゴール判定をもっと手前に移動（今回：-260） ★
+const GOAL_OFFSET = -260;
 
 // 計算される最終停止位置
 let stopPosition = 0;
@@ -74,7 +74,7 @@ function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // ★ ゴール判定をもっと手前へ（GOAL_OFFSET = -180）
+    // ★ ゴール判定を大きく手前へ（GOAL_OFFSET = -260）
     const goalLine = containerWidth + GOAL_OFFSET;
 
     if (backgroundStopped && dogRight >= goalLine) {
@@ -119,4 +119,3 @@ function startCountdown() {
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
 document.getElementById("raceContainer").addEventListener("click", startCountdown);
-
