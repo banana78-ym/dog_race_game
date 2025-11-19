@@ -2,12 +2,13 @@ body {
   margin: 0;
   overflow: hidden;
   background: white;
+  height: 100vh;
 }
 
 #raceContainer {
   position: relative;
   width: 100vw;
-  height: 200px;
+  height: calc(var(--real-vh, 1vh) * 100); /* iPhone 100vh バグ対応 */
   overflow: hidden;
   background: white;
 }
@@ -20,7 +21,7 @@ body {
   height: 200px;
   width: auto;
   transform-origin: left top;
-  transform: scaleX(1.5); /* スタート付近だけ見える */
+  transform: scaleX(1.5);
 }
 
 /* 犬画像 */
@@ -39,7 +40,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5); /* 半透明グレー */
+  background-color: rgba(0,0,0,0.5);
   z-index: 10;
 }
 
@@ -53,7 +54,7 @@ body {
   color: white;
   font-weight: bold;
   text-align: center;
-  z-index: 20; /* overlay 内で文字は前面 */
+  z-index: 20;
 }
 
 /* カウントダウン */
@@ -79,15 +80,15 @@ body {
   z-index: 20;
 }
 
-/* TAPボタン */
+/* TAPボタン（位置修正済み） */
 #tapButton {
   position: absolute;
-  right: 20px;
+  left: 60%;     /* 真ん中より少し右 */
   top: 50%;
   transform: translateY(-50%);
-  padding: 15px 20px;
+  padding: 15px 25px;
   border-radius: 50%;
-  font-size: 20px;
-  display: none; /* 最初は非表示 */
+  font-size: 22px;
+  display: none;
   z-index: 20;
 }
