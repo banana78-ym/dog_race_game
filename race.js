@@ -21,7 +21,7 @@ let trackSpeed = 6;
 // ★★★ ゴールライン調整値（ここが今回の超重要ポイント） ★★★
 // 早く止まる → 値をもっとマイナスへ
 // 黒が出る → 値を 0 に近づける
-const GOAL_MARGIN = -40;
+const GOAL_MARGIN = -7S0;
 
 // 計算されるスクロール停止位置
 let stopPosition = 0;
