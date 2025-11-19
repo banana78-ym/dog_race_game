@@ -5,82 +5,79 @@ dog.src = "dogs/" + selectedDog;
 
 // ---------------- トラック設定 ----------------
 const track = document.getElementById("track");
-let trackX = 0;                    // トラックの左位置（スクロール用）
-let trackWidth = 0;                // トラック画像の実幅
-let trackSpeed = 5;                // スクロール速度
-let goalPosition = 0;              // ゴール位置
+let trackX = 0;
+let trackWidth = 0;
+let trackSpeed = 7;     // 🔥 1タップで進む距離を少し増やした
+let goalPosition = 0;
 let containerWidth = 0;
 
-// 犬の位置は常に固定！画面から見切れさせない
-let dogX = 40;   
+// 犬の位置は固定（見切れ防止）
+let dogX = 40;
 dog.style.left = dogX + "px";
 
 track.onload = () => {
     trackWidth = track.naturalWidth;
     containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // ゴール位置 = 画面右端にゴールラインが見える位置
-    goalPosition = containerWidth - trackWidth;
-
-    console.log("Track width:", trackWidth);
-    console.log("Goal position:", goalPosition);
+    // 🔥 ゴールラインを画像右端より少し左に設定（50px手前をゴールに）
+    goalPosition = containerWidth - trackWidth + 50;
 };
 
-// ---------------- TAPボタン ----------------
-const tapButton = document.getElementById("tapButton");
-let canTap = false;
-
-// ---------------- タイマー ----------------
-let time = 0;
+// ---------------- タイマー（実測時間ベース） ----------------
 let timerRunning = false;
+let startTime = 0;
 
-setInterval(() => {
+function updateTimer() {
     if (timerRunning) {
-        time += 0.01;
-        document.getElementById("timer").textContent = time.toFixed(2) + " s";
+        const now = Date.now();
+        const elapsed = (now - startTime) / 1000;
+        document.getElementById("timer").textContent = elapsed.toFixed(2) + " s";
+        requestAnimationFrame(updateTimer); // スムーズで正確
     }
-}, 10);
+}
 
-// ---------------- 背景スクロール＋ゴール判定 ----------------
+// ---------------- 背景スクロール ----------------
 function moveTrack() {
-    // すでにゴールに到達していたら、スクロール止める
     if (trackX <= goalPosition) {
+        // ゴールラインに到達
         trackX = goalPosition;
         track.style.left = trackX + "px";
-        return true; // ゴール到達
+        return true;
     }
 
-    // スクロールする
     trackX -= trackSpeed;
     track.style.left = trackX + "px";
     return false;
 }
 
 function checkGoal() {
-    if (moveTrack() === true) {
-        alert("GOAL!! Time: " + time.toFixed(2) + "s");
-        canTap = false;
+    if (moveTrack()) {
         timerRunning = false;
+        alert("GOAL!!");
     }
 }
 
-// ---------------- TAP ボタンで進む ----------------
+// ---------------- TAPボタン ----------------
+const tapButton = document.getElementById("tapButton");
+let canTap = false;
+
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
-
     checkGoal();
 });
 
-// ---------------- カウントダウン ----------------
+// ---------------- Tap to Start → カウントダウン ----------------
 const overlay = document.getElementById("overlay");
 const tapText = document.getElementById("tapText");
 const countdown = document.getElementById("countdown");
+
 let screenTapped = false;
 
 document.getElementById("raceContainer").addEventListener("click", () => {
     if (screenTapped) return;
     screenTapped = true;
 
+    // オーバーレイ削除
     tapText.style.display = "none";
     overlay.style.display = "none";
 
@@ -93,15 +90,23 @@ document.getElementById("raceContainer").addEventListener("click", () => {
 
     const interval = setInterval(() => {
         count--;
+
         if (count > 0) {
             countdown.textContent = count;
         } else {
             countdown.textContent = "GO!";
+
             setTimeout(() => {
                 countdown.style.display = "none";
                 canTap = true;
+
+                // 🔥 タイマーを実測開始！
+                startTime = Date.now();
                 timerRunning = true;
+                updateTimer();
+
             }, 500);
+
             clearInterval(interval);
         }
     }, 1000);
