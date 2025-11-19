@@ -29,8 +29,8 @@ function updateTrackMetrics() {
     trackWidth = track.clientWidth || track.naturalWidth;
     containerWidth = raceContainer.clientWidth;
 
-    // 🔥ここを「−40px」ずらすことでスクロールがもう少し長く続く
-    stopPosition = containerWidth - trackWidth - 40;
+    // 🔥 少しだけ遅く止める（-50px）
+    stopPosition = containerWidth - trackWidth - 50;
 }
 
 if (track.complete) updateTrackMetrics();
@@ -52,7 +52,7 @@ let canTap = false;
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
-    // 犬は常に動く
+    // 犬前進
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
@@ -72,7 +72,7 @@ tapButton.addEventListener("click", () => {
 });
 
 // ==========================
-//  タイマー（本物の時間ベース）
+//  タイマー（本物の時間）
 // ==========================
 let time = 0;
 let timerRunning = false;
@@ -87,7 +87,7 @@ setInterval(() => {
 }, 50);
 
 // ==========================
-//  ゴール判定（犬の画像で判定）
+//  ゴール判定（犬の画像）
 // ==========================
 function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
@@ -142,3 +142,4 @@ function startCountdown() {
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
 raceContainer.addEventListener("click", startCountdown);
+
