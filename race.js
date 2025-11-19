@@ -15,11 +15,11 @@ let dogSpeed = 12;
 // スクロール速度
 let trackSpeed = 9;
 
-// ★★★★★ 絶対に変えないスクロール停止位置オフセット ★★★★★
+// ★★★★★ 絶対に変えないスクロール停止位置 ★★★★★
 const STOP_OFFSET = -105;
 
-// ★ ゴール判定をもっと手前に移動（今回：-260） ★
-const GOAL_OFFSET = -260;
+// ★ ゴール判定をもっと手前に（今回：-360） ★
+const GOAL_OFFSET = -360;
 
 // 計算される最終停止位置
 let stopPosition = 0;
@@ -39,11 +39,11 @@ let backgroundStopped = false;
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
-    // 犬を右に動かす
+    // 犬を右へ
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
-    // 背景スクロール（STOP_POSITIONまで）
+    // 背景スクロール（STOP_OFFSET の位置まで）
     if (!backgroundStopped) {
         trackX -= trackSpeed;
 
@@ -74,7 +74,7 @@ function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // ★ ゴール判定を大きく手前へ（GOAL_OFFSET = -260）
+    // ★ 手前に寄せた goalLine
     const goalLine = containerWidth + GOAL_OFFSET;
 
     if (backgroundStopped && dogRight >= goalLine) {
