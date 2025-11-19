@@ -9,107 +9,113 @@ let trackX = 0;
 let trackWidth = 0;
 let backgroundStopped = false;
 
-// 犬
-let dogX = 0;              // 左端スタート
-let dogSpeed = 12;         // 犬の進み具合
+// 犬の位置（画面基準）
+let dogX = 0;
+let dogSpeed = 12;
 
 // スクロール速度
 let trackSpeed = 9;
 
-// ゴール調整
+// ゴール調整（余白なくす）
 const GOAL_MARGIN = 340;
 let stopPosition = 0;
 
 // トラック画像読み込み後
 track.onload = () => {
-    trackWidth = track.naturalWidth;
-    const containerWidth = document.getElementById("raceContainer").clientWidth;
-
-    stopPosition = -(trackWidth - containerWidth) + GOAL_MARGIN;
+  trackWidth = track.naturalWidth;
+  const containerWidth = document.getElementById("raceContainer").clientWidth;
+  stopPosition = -(trackWidth - containerWidth) + GOAL_MARGIN;
 };
 
-// ---------------- TAPボタン ----------------
+// ------------- TAP ボタン -------------
 const tapButton = document.getElementById("tapButton");
 let canTap = false;
 
 tapButton.addEventListener("click", () => {
-    if (!canTap) return;
+  if (!canTap) return;
 
-    // 犬は常に動く（スクロールが止まっても止まらない）
-    dogX += dogSpeed;
-    dog.style.left = dogX + "px";
+  // 犬は必ず右へ動く
+  dogX += dogSpeed;
+  dog.style.left = dogX + "px";
 
-    // 背景スクロール（ゴールライン見えるまで）
-    if (!backgroundStopped) {
-        trackX -= trackSpeed;
+  // 背景はゴールラインが見えるまでスクロール
+  if (!backgroundStopped) {
+    trackX -= trackSpeed;
 
-        if (trackX <= stopPosition) {
-            trackX = stopPosition;
-            backgroundStopped = true;   // ← 背景だけ止まる
-        }
-
-        track.style.left = trackX + "px";
+    if (trackX <= stopPosition) {
+      trackX = stopPosition;
+      backgroundStopped = true;  // ← 背景だけ止まる
     }
 
-    checkGoal();
+    track.style.left = trackX + "px";
+  }
+
+  checkGoal();
 });
 
-// ---------------- タイマー ----------------
+// ------------- タイマー -------------
 let time = 0;
 let timerRunning = false;
 
 setInterval(() => {
-    if (timerRunning) {
-        time += 0.01;
-        document.getElementById("timer").textContent = time.toFixed(2) + " s";
-    }
+  if (timerRunning) {
+    time += 0.01;
+    document.getElementById("timer").textContent = time.toFixed(2) + " s";
+  }
 }, 10);
 
-// ---------------- ゴール判定 ----------------
+// ------------- ゴール判定（超重要：実際の犬の見えている位置で判定）-------------
 function checkGoal() {
-    const dogRight = dogX + dog.clientWidth; 
-    const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    // 背景停止後 → 犬だけ右に進んでゴール判定
-    if (backgroundStopped && dogRight >= containerWidth - 20) {
-        timerRunning = false;
-        canTap = false;
-        alert("GOAL!! Time: " + time.toFixed(2) + " s");
-    }
+  const dogRect = dog.getBoundingClientRect();   // ← 実際の犬の画面上の位置
+  const containerRect = document.getElementById("raceContainer").getBoundingClientRect();
+
+  const dogRight = dogRect.right;
+  const goalX = containerRect.right - 20;   // ← 右端から20px以内でゴール
+
+  if (backgroundStopped && dogRight >= goalX) {
+    timerRunning = false;
+    canTap = false;
+    alert("GOAL!! Time: " + time.toFixed(2) + " s");
+  }
 }
 
-// ---------------- Tap to Start ----------------
+// ------------- Tap to Start -------------
 const countdown = document.getElementById("countdown");
 let screenTapped = false;
 
 function startCountdown() {
-    if (screenTapped) return;
-    screenTapped = true;
+  if (screenTapped) return;
+  screenTapped = true;
 
-    document.getElementById("overlay").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
 
-    countdown.style.display = "block";
-    tapButton.style.display = "block";
-    canTap = false;
+  countdown.style.display = "block";
+  tapButton.style.display = "block";
+  canTap = false;
 
-    let count = 3;
-    countdown.textContent = count;
+  let count = 3;
+  countdown.textContent = count;
 
-    const interval = setInterval(() => {
-        count--;
-        if (count > 0) {
-            countdown.textContent = count;
-        } else {
-            countdown.textContent = "GO!";
-            setTimeout(() => {
-                countdown.style.display = "none";
-                canTap = true;
-                timerRunning = true;
-            }, 500);
-            clearInterval(interval);
-        }
-    }, 1000);
+  const interval = setInterval(() => {
+    count--;
+    if (count > 0) {
+      countdown.textContent = count;
+    } else {
+      countdown.textContent = "GO!";
+      setTimeout(() => {
+        countdown.style.display = "none";
+        canTap = true;
+        timerRunning = true;
+      }, 500);
+      clearInterval(interval);
+    }
+  }, 1000);
 }
+
+document.getElementById("overlay").addEventListener("click", startCountdown);
+document.getElementById("raceContainer").addEventListener("click", startCountdown);
+
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
 document.getElementById("raceContainer").addEventListener("click", startCountdown);
