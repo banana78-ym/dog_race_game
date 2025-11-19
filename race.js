@@ -12,12 +12,9 @@ let goalPosition = 0;
 
 track.onload = () => {
     trackWidth = track.naturalWidth;
-    console.log("Track width:", trackWidth);
 
-    // ゴール判定を画像幅に合わせる（余白ゼロ）
     const containerWidth = document.getElementById("raceContainer").clientWidth;
     goalPosition = containerWidth - trackWidth;
-    console.log("Goal position:", goalPosition);
 };
 
 // ---------------- 犬移動 ----------------
@@ -55,7 +52,6 @@ setInterval(() => {
 function checkGoal() {
     if (trackWidth === 0) return;
 
-    // 画像の実際の幅でゴール判定（scaleX は無視）
     const containerWidth = document.getElementById("raceContainer").clientWidth;
     goalPosition = containerWidth - trackWidth;
 
@@ -67,34 +63,38 @@ function checkGoal() {
     }
 }
 
-// ---------------- 画面タップでカウントダウン開始 ----------------
+// ---------------- Tap to Start（overlayクリック） ----------------
+const overlay = document.getElementById("overlay");
 const countdown = document.getElementById("countdown");
-let screenTapped = false;
+let started = false;
 
-document.getElementById("raceContainer").addEventListener("click", () => {
-    if (screenTapped) return;
-    screenTapped = true;
+overlay.onclick = () => {
+  if (started) return;
+  started = true;
 
-    // カウントダウン表示 & TAPボタン表示（押せない）
-    countdown.style.display = "block";
-    tapButton.style.display = "block";
-    canTap = false;
+  // overlay（グレーと文字）を消す
+  overlay.style.display = "none";
 
-    let count = 3;
-    countdown.textContent = count;
+  // カウントダウン開始
+  countdown.style.display = "block";
+  tapButton.style.display = "block";
+  canTap = false;
 
-    const interval = setInterval(() => {
-        count--;
-        if (count > 0) {
-            countdown.textContent = count;
-        } else {
-            countdown.textContent = "GO!";
-            setTimeout(() => {
-                countdown.style.display = "none";
-                canTap = true;       // TAPボタン押せる
-                timerRunning = true; // タイマー開始
-            }, 500);
-            clearInterval(interval);
-        }
-    }, 1000);
-});
+  let count = 3;
+  countdown.textContent = count;
+
+  const interval = setInterval(() => {
+      count--;
+      if (count > 0) {
+          countdown.textContent = count;
+      } else {
+          countdown.textContent = "GO!";
+          setTimeout(() => {
+              countdown.style.display = "none";
+              canTap = true;
+              timerRunning = true;
+          }, 500);
+          clearInterval(interval);
+      }
+  }, 1000);
+};
