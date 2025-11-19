@@ -1,68 +1,57 @@
-// ==========================
-//  犬画像
-// ==========================
+// ---------------- 犬画像 ----------------
 const selectedDog = localStorage.getItem("selectedDog") || "dog1.png";
 const dog = document.getElementById("dog");
 dog.src = "dogs/" + selectedDog;
 
-// ==========================
-//  トラック
-// ==========================
+// ---------------- トラック設定 ----------------
 const track = document.getElementById("track");
-const raceContainer = document.getElementById("raceContainer");
-
 let trackX = 0;
 let trackWidth = 0;
-let containerWidth = 0;
+
+// 犬
+let dogX = 0;            
+let dogSpeed = 12;       
+
+// スクロール速度
+let trackSpeed = 9;
+
+// ★★★★★ 絶対に変えないスクロール停止位置オフセット ★★★★★
+const STOP_OFFSET = -105;
+
+// ゴール判定を少し左に手前移動（ここだけ変更）
+const GOAL_OFFSET = -40;
+
+// 計算される最終停止位置
 let stopPosition = 0;
-let backgroundStopped = false;
 
-let dogX = 20;
-let dogSpeed = 10;
+track.onload = () => {
+    trackWidth = track.naturalWidth;
+    const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-let trackSpeed = 7;
+    // ★ 絶対に完璧だった計算式 + STOP_OFFSET = -105を使用
+    stopPosition = -(trackWidth - containerWidth) + STOP_OFFSET;
+};
 
-// --------------------------
-// トラック幅 + 停止位置計算
-// --------------------------
-function updateTrackMetrics() {
-    trackWidth = track.clientWidth || track.naturalWidth;
-    containerWidth = raceContainer.clientWidth;
 
-    // 🔥 いまより 40px だけ遅く止まる（−105px）
-    stopPosition = containerWidth - trackWidth - 105;
-}
-
-if (track.complete) updateTrackMetrics();
-else track.onload = updateTrackMetrics;
-
-window.addEventListener("resize", () => {
-    updateTrackMetrics();
-    trackX = 0;
-    track.style.left = trackX + "px";
-    backgroundStopped = false;
-});
-
-// ==========================
-//  TAPボタン
-// ==========================
+// ---------------- TAPボタン ----------------
 const tapButton = document.getElementById("tapButton");
 let canTap = false;
+let backgroundStopped = false;
 
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
-    // 犬前進
+    // 犬を右に動かす（スクロール停止後も動く）
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
-    // 背景スクロール（止まるまでは動く）
+    // 背景スクロール（STOP_POSITIONまで）
     if (!backgroundStopped) {
         trackX -= trackSpeed;
 
         if (trackX <= stopPosition) {
             trackX = stopPosition;
-            backgroundStopped = true;  // ここからは犬だけ動く
+            backgroundStopped = true; 
         }
 
         track.style.left = trackX + "px";
@@ -71,38 +60,36 @@ tapButton.addEventListener("click", () => {
     checkGoal();
 });
 
-// ==========================
-//  タイマー（本物の経過時間）
-// ==========================
+
+// ---------------- タイマー ----------------
 let time = 0;
 let timerRunning = false;
-let startTime = null;
 
 setInterval(() => {
-    if (timerRunning && startTime !== null) {
-        const now = performance.now();
-        time = (now - startTime) / 1000;
+    if (timerRunning) {
+        time += 0.01;
         document.getElementById("timer").textContent = time.toFixed(2) + " s";
     }
-}, 50);
+}, 10);
 
-// ==========================
-//  ゴール判定（犬の画像）
-// ==========================
+
+// ---------------- ゴール判定 ----------------
 function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
-    const containerW = raceContainer.clientWidth;
+    const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    if (backgroundStopped && dogRight >= containerW - 10) {
+    // ★ ゴール判定地点を少し手前へ（GOAL_OFFSET = -40）
+    const goalLine = containerWidth + GOAL_OFFSET;
+
+    if (backgroundStopped && dogRight >= goalLine) {
         timerRunning = false;
         canTap = false;
         alert("GOAL!! Time: " + time.toFixed(2) + " s");
     }
 }
 
-// ==========================
-// Tap to Start（カウントダウン）
-// ==========================
+
+// ---------------- Tap to Start カウントダウン ----------------
 const countdown = document.getElementById("countdown");
 let screenTapped = false;
 
@@ -111,10 +98,6 @@ function startCountdown() {
     screenTapped = true;
 
     document.getElementById("overlay").style.display = "none";
-
-    time = 0;
-    startTime = null;
-    timerRunning = false;
 
     countdown.style.display = "block";
     tapButton.style.display = "block";
@@ -132,7 +115,6 @@ function startCountdown() {
             setTimeout(() => {
                 countdown.style.display = "none";
                 canTap = true;
-                startTime = performance.now();
                 timerRunning = true;
             }, 500);
             clearInterval(interval);
@@ -141,4 +123,4 @@ function startCountdown() {
 }
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
-raceContainer.addEventListener("click", startCountdown);
+document.getElementById("raceContainer").addEventListener("click", startCountdown);
