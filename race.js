@@ -13,8 +13,8 @@ let stopPosition = 0;
 
 // 犬
 let dogX = 0;
-// ★ 犬の速度を少し遅めに調整
-let dogSpeed = 10;
+// ★ 犬の速度をさらに少し遅く（8）
+let dogSpeed = 8;
 
 // スクロール（変更禁止）
 let trackSpeed = 9;
@@ -89,7 +89,7 @@ function checkGoal() {
   const containerWidth = raceContainer.clientWidth;
   const dogRight = dogX + dog.clientWidth;
 
-  const GOAL_MARGIN = 20; // ← 触らない
+  const GOAL_MARGIN = 20; // 触らない
   const goalLine = containerWidth - GOAL_MARGIN;
 
   if (backgroundStopped && dogRight >= goalLine) {
@@ -98,7 +98,6 @@ function checkGoal() {
 
     alert("GOAL!! Time: " + time.toFixed(2) + " s");
 
-    // ★ Restartボタン表示
     restartButton.style.display = "block";
   }
 }
@@ -143,4 +142,3 @@ function startCountdown() {
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
 document.getElementById("raceContainer").addEventListener("click", startCountdown);
-
