@@ -16,7 +16,7 @@ html, body {
   background: black;
 }
 
-/* トラック：画面いっぱい（高さ基準） */
+/* トラック画像（縦いっぱい） */
 #track {
   position: absolute;
   top: 0;
@@ -37,7 +37,7 @@ html, body {
   pointer-events: none;
 }
 
-/* グレーオーバーレイ */
+/* グレー overlay */
 #overlay {
   position: absolute;
   top: 0;
@@ -84,7 +84,7 @@ html, body {
   z-index: 20;
 }
 
-/* TAP ボタン */
+/* TAPボタン */
 #tapButton {
   position: absolute;
   left: 50%;
@@ -101,18 +101,18 @@ html, body {
   touch-action: manipulation;
 }
 
-/* Restart ボタン */
+/* Restartボタン */
 #restartButton {
   position: absolute;
   left: 50%;
   bottom: 100px;
   transform: translateX(-50%);
-  padding: 18px 28px;
-  border-radius: 20px;
-  font-size: 18px;
-  background: rgba(255,255,255,0.85);
-  color: black;
-  border: none;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 20px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: 2px solid white;
   display: none;
   z-index: 20;
 }
