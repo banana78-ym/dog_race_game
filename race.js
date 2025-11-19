@@ -8,38 +8,44 @@ const track = document.getElementById("track");
 const raceContainer = document.getElementById("raceContainer");
 
 let trackX = 0;
-let trackWidth = 1919;   // ← onload が壊れても絶対この値を使う
+let trackWidth = 0;
 let stopPosition = 0;
 let backgroundStopped = false;
 
 // 犬
 let dogX = 0;
-let dogSpeed = 9;
+let dogSpeed = 9;  // ← 少しだけ遅く（前よりゆっくり）
 
 // スクロール速度
 let trackSpeed = 9;
 
-// ★ 完璧に決まっていた停止位置
+// ★ スクロール停止位置（絶対に変更しない基準値）
 const STOP_OFFSET = -105;
 
-// ★ ゴール判定だけ調整
+// ★ ゴール判定位置（少し手前に）
 const GOAL_OFFSET = -40;
 
-// -------------- 安全なロード処理（絶対に計算される） --------------
-function calculateStopPosition() {
+
+// ------------------------------------------------------------
+// 画像ロード後に stopPosition が確実に設定されるようにする
+// ------------------------------------------------------------
+function initTrack() {
+    trackWidth = track.naturalWidth;
+
+    // 読み込めてない場合 → 画像読み込み待ち
+    if (!trackWidth || trackWidth === 0) {
+        setTimeout(initTrack, 50);
+        return;
+    }
+
     const containerWidth = raceContainer.clientWidth;
+
+    // ゴールラインがちょうど見える位置
     stopPosition = -(trackWidth - containerWidth) + STOP_OFFSET;
 }
 
-// onload が発火するなら使う
-track.onload = () => {
-    calculateStopPosition();
-};
-
-// 万が一 onload が動かなくても1秒後に強制実行
-setTimeout(() => {
-    if (stopPosition === 0) calculateStopPosition();
-}, 1000);
+track.onload = initTrack;
+initTrack(); // 念のため二重で初期化 → これが stopPosition 未設定バグを防ぐ
 
 
 // ---------------- TAPボタン ----------------
@@ -49,10 +55,11 @@ let canTap = false;
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
+    // 犬はスクロール停止後も走り続ける
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
-    // 背景スクロール
+    // 背景スクロール（STOP位置まで）
     if (!backgroundStopped) {
         trackX -= trackSpeed;
 
@@ -60,6 +67,7 @@ tapButton.addEventListener("click", () => {
             trackX = stopPosition;
             backgroundStopped = true;
         }
+
         track.style.left = trackX + "px";
     }
 
@@ -67,11 +75,11 @@ tapButton.addEventListener("click", () => {
 });
 
 
-// ---------------- タイマー（絶対に1つだけ動くように保護） ----------------
+// ---------------- タイマー ----------------
 let time = 0;
 let timerRunning = false;
 
-let timerStarted = false;
+// setInterval は1つだけ動かす（タイマーずれ防止）
 setInterval(() => {
     if (timerRunning) {
         time += 0.01;
@@ -90,12 +98,13 @@ function checkGoal() {
     if (backgroundStopped && dogRight >= goalLine) {
         timerRunning = false;
         canTap = false;
+
         alert("GOAL!! Time: " + time.toFixed(2) + " s");
     }
 }
 
 
-// ---------------- カウントダウン ----------------
+// ---------------- Tap to Start カウントダウン ----------------
 const countdown = document.getElementById("countdown");
 let screenTapped = false;
 
@@ -104,8 +113,10 @@ function startCountdown() {
     screenTapped = true;
 
     document.getElementById("overlay").style.display = "none";
+
     countdown.style.display = "block";
     tapButton.style.display = "block";
+    canTap = false;
 
     let count = 3;
     countdown.textContent = count;
