@@ -1,36 +1,37 @@
+/* 画面全体（横画面前提） */
 body {
   margin: 0;
   overflow: hidden;
-  background: white;
-  height: 100vh;
+  background: black;
 }
 
+/* レースコンテナ（横画面でスマホ全画面にフィット） */
 #raceContainer {
   position: relative;
   width: 100vw;
-  height: calc(var(--real-vh, 1vh) * 100); /* iPhone 100vh バグ対応 */
+  height: 100vh; /* ←スマホ画面の高さに合わせる */
   overflow: hidden;
-  background: white;
+  background: black;
 }
 
-/* トラック画像 */
+/* トラック画像（スマホ横画面の高さにぴったりフィット） */
 #track {
   position: absolute;
   top: 0;
   left: 0;
-  height: 200px;
-  width: auto;
-  transform-origin: left top;
-  transform: scaleX(1.5);
+  width: 100%;        /* ←画面幅いっぱい */
+  height: 100%;       /* ←画面高さいっぱい */
+  object-fit: cover;  /* ←画像を余白ゼロで拡大 */
 }
 
 /* 犬画像 */
 #dog {
   position: absolute;
-  bottom: 15px;
-  left: 20px;
-  height: 80px;
+  bottom: 10%;   /* ←画面の下10%あたりに配置（調整OK） */
+  left: 5%;      /* ←スタート位置 */
+  height: 20%;   /* ←画面に対する高さなのでスマホでも崩れない */
   width: auto;
+  z-index: 5;    /* ←前面 */
 }
 
 /* グレーオーバーレイ */
@@ -50,7 +51,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 40px;
+  font-size: 6vw; /* 画面に合わせて調整 */
   color: white;
   font-weight: bold;
   text-align: center;
@@ -60,35 +61,38 @@ body {
 /* カウントダウン */
 #countdown {
   position: absolute;
-  top: 40%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 60px;
+  font-size: 12vw;
   font-weight: bold;
   display: none;
-  z-index: 20;
+  z-index: 30;
 }
 
 /* タイマー */
 #timer {
   position: absolute;
-  top: 10px;
+  top: 2%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 24px;
+  font-size: 6vw;
   font-weight: bold;
+  color: white;
   z-index: 20;
 }
 
-/* TAPボタン（位置修正済み） */
+/* TAP ボタン（位置：中央より少し右寄り） */
 #tapButton {
   position: absolute;
-  left: 60%;     /* 真ん中より少し右 */
+  right: 8%; /* ←右寄りだけど端じゃない。理想の位置 */
   top: 50%;
   transform: translateY(-50%);
-  padding: 15px 25px;
+  padding: 20px 28px;
   border-radius: 50%;
-  font-size: 22px;
+  font-size: 6vw;
   display: none;
-  z-index: 20;
+  z-index: 25;
+  background: white;
+  border: 3px solid #ccc;
 }
