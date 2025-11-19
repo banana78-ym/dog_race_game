@@ -18,8 +18,8 @@ let dogSpeed = 8;
 // スクロール速度
 let trackSpeed = 9;
 
-// ★★★★★ スクロール停止位置（今回は -60 に調整）★★★★★
-const STOP_OFFSET = -60;
+// ★★★★★ スクロール停止位置（今回は -50 に調整）★★★★★
+const STOP_OFFSET = -50;
 
 let backgroundStopped = false;
 
