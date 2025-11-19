@@ -9,19 +9,19 @@ let trackX = 0;
 let trackWidth = 0;
 
 // 犬
-let dogX = 0;            
-let dogSpeed = 12;       
+let dogX = 0;
+let dogSpeed = 12;
 
 // スクロール速度
 let trackSpeed = 9;
 
-// ★★★★★ 絶対に変えないスクロール停止位置オフセット ★★★★★
+// ★★★★★ 完璧だったスクロール停止位置（絶対に変えない）★★★★★
 const STOP_OFFSET = -105;
 
-// ★ ゴール判定だけ手前へ（-40 → -50 に変更）
+// ★ ゴール判定だけを手前に（ここだけ調整可能！）
 const GOAL_OFFSET = -50;
 
-// 計算される最終停止位置
+// 計算される最終スクロール停止位置
 let stopPosition = 0;
 
 track.onload = () => {
@@ -40,9 +40,11 @@ let backgroundStopped = false;
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
+    // 犬を進める（スクロール停止後も動く）
     dogX += dogSpeed;
-    dog.style.left = dogX + "px";
+    dog.style.left = `${dogX}px`;
 
+    // スクロール（停止位置までは止めない）
     if (!backgroundStopped) {
         trackX -= trackSpeed;
 
@@ -51,7 +53,7 @@ tapButton.addEventListener("click", () => {
             backgroundStopped = true;
         }
 
-        track.style.left = trackX + "px";
+        track.style.left = `${trackX}px`;
     }
 
     checkGoal();
@@ -65,7 +67,7 @@ let timerRunning = false;
 setInterval(() => {
     if (timerRunning) {
         time += 0.01;
-        document.getElementById("timer").textContent = time.toFixed(2) + " s";
+        document.getElementById("timer").textContent = `${time.toFixed(2)} s`;
     }
 }, 10);
 
@@ -75,12 +77,13 @@ function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    const goalLine = containerWidth + GOAL_OFFSET;  
+    // 右端基準→ 画面右手前で判定するようにオフセットだけ調整
+    const goalLine = containerWidth + GOAL_OFFSET;
 
     if (backgroundStopped && dogRight >= goalLine) {
         timerRunning = false;
         canTap = false;
-        alert("GOAL!! Time: " + time.toFixed(2) + " s");
+        alert(`GOAL!! Time: ${time.toFixed(2)} s`);
     }
 }
 
@@ -119,4 +122,3 @@ function startCountdown() {
 }
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
-document.getElementById("raceContainer").addEventListener("click", startCountdown);
