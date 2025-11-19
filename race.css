@@ -1,40 +1,54 @@
-/* 画面全体（横画面前提） */
+/* ---------- 全体設定 ---------- */
 body {
   margin: 0;
   overflow: hidden;
-  background: black;
+  background: white;
+
+  /* スマホでダブルタップ拡大防止 */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-/* レースコンテナ（横画面でスマホ全画面にフィット） */
+/* ---------- レース画面コンテナ ---------- */
 #raceContainer {
   position: relative;
   width: 100vw;
-  height: 100vh; /* ←スマホ画面の高さに合わせる */
+  height: 100vh; /* 画面の高さに完全フィット */
   overflow: hidden;
-  background: black;
+  background: white;
+
+  /* スマホ拡大防止 */
+  touch-action: none;
 }
 
-/* トラック画像（スマホ横画面の高さにぴったりフィット） */
+/* ---------- トラック画像（背景） ---------- */
 #track {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;        /* ←画面幅いっぱい */
-  height: 100%;       /* ←画面高さいっぱい */
-  object-fit: cover;  /* ←画像を余白ゼロで拡大 */
+
+  width: 200%; /* 横に長いトラックでも全体をカバー */
+  height: 100%;
+  object-fit: cover; /* 縦横比を保ちながら全画面フィット */
+
+  transform-origin: left center;
 }
 
-/* 犬画像 */
+/* ---------- 犬画像 ---------- */
 #dog {
   position: absolute;
-  bottom: 10%;   /* ←画面の下10%あたりに配置（調整OK） */
-  left: 5%;      /* ←スタート位置 */
-  height: 20%;   /* ←画面に対する高さなのでスマホでも崩れない */
+  bottom: 5%;
+  left: 5%;
+  height: 20%;
   width: auto;
-  z-index: 5;    /* ←前面 */
+
+  z-index: 5;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-/* グレーオーバーレイ */
+/* ---------- Tap to Start オーバーレイ ---------- */
 #overlay {
   position: absolute;
   top: 0;
@@ -45,54 +59,65 @@ body {
   z-index: 10;
 }
 
-/* Tap to Start 文字 */
 #tapText {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 6vw; /* 画面に合わせて調整 */
+  font-size: 40px;
   color: white;
   font-weight: bold;
   text-align: center;
   z-index: 20;
 }
 
-/* カウントダウン */
+/* ---------- カウントダウン ---------- */
 #countdown {
   position: absolute;
-  top: 45%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 12vw;
+  font-size: 60px;
   font-weight: bold;
   display: none;
-  z-index: 30;
+  color: white;
+  z-index: 25;
 }
 
-/* タイマー */
+/* ---------- タイマー ---------- */
 #timer {
   position: absolute;
-  top: 2%;
+  top: 5%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 6vw;
+  font-size: 24px;
   font-weight: bold;
-  color: white;
-  z-index: 20;
+  z-index: 30;
+  color: black;
 }
 
-/* TAP ボタン（位置：中央より少し右寄り） */
+/* ---------- TAPボタン（完全版） ---------- */
 #tapButton {
   position: absolute;
-  right: 8%; /* ←右寄りだけど端じゃない。理想の位置 */
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 20px 28px;
-  border-radius: 50%;
-  font-size: 6vw;
-  display: none;
-  z-index: 25;
-  background: white;
-  border: 3px solid #ccc;
+  left: 50%;          /* 中央寄せ */
+  bottom: 5%;         /* 画面の下に配置 */
+  transform: translateX(-50%);
+
+  width: 80px;
+  height: 80px;
+  border-radius: 50%; /* 完全な丸 */
+
+  background: rgba(255, 0, 0, 0.6); /* 半透明の赤 */
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+
+  border: none;
+  display: none;      /* 最初は非表示 */
+  z-index: 30;
+
+  /* スマホの連打で拡大しないように */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
