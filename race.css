@@ -1,33 +1,37 @@
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  background: white;
+  background: black;
+  /* 連打しても変なジェスチャーが出にくくする */
+  touch-action: manipulation;
 }
 
 #raceContainer {
   position: relative;
   width: 100vw;
-  height: 200px;
+  height: 100vh;      /* スマホ横画面いっぱい */
   overflow: hidden;
-  background: white;
+  background: black;
 }
 
-/* トラック画像 */
+/* トラック画像：縦を画面いっぱいにして、横が長くなる */
 #track {
   position: absolute;
   top: 0;
   left: 0;
-  height: 200px;
+  height: 100vh;      /* さっき「全画面になった！」と言ってたやつに戻す */
   width: auto;
-  transform-origin: left top;
   z-index: 1;
 }
 
-/* 犬画像：絶対配置で画面基準で動く */
+/* 犬画像：画面基準で絶対配置 → dogX の値でちゃんと右に動く */
 #dog {
   position: absolute;
   bottom: 15px;
-  left: 0px;
+  left: 0px;          /* JS の dogX でここが動く */
   height: 80px;
   width: auto;
   z-index: 5;
@@ -54,6 +58,7 @@ body {
   font-size: 40px;
   color: white;
   font-weight: bold;
+  text-align: center;
   z-index: 20;
 }
 
@@ -77,24 +82,23 @@ body {
   transform: translateX(-50%);
   font-size: 24px;
   font-weight: bold;
+  color: white;
   z-index: 20;
 }
 
-/* TAPボタン */
+/* TAPボタン：丸＋少し透け赤、連打しやすい大きさ */
 #tapButton {
   position: absolute;
-  right: 20px;
+  left: 50%;
   bottom: 20px;
-  padding: 20px;
+  transform: translateX(-50%);
+  padding: 22px;
   border-radius: 50%;
   font-size: 20px;
-  background: rgba(255,0,0,0.6);
+  background: rgba(255,0,0,0.7);
   color: white;
   border: none;
   display: none;
   z-index: 20;
-}
-
-  display: none;
-  z-index: 20;
+  touch-action: manipulation;
 }
