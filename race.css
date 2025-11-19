@@ -20,15 +20,14 @@ body {
   height: 200px;
   width: auto;
   transform-origin: left top;
-  transform: scaleX(1.5);
   z-index: 1;
 }
 
-/* 犬画像（←絶対配置で画面全体を自由に動けるようにした） */
+/* 犬画像：絶対配置で画面基準で動く */
 #dog {
   position: absolute;
   bottom: 15px;
-  left: 0px;        
+  left: 0px;
   height: 80px;
   width: auto;
   z-index: 5;
@@ -55,7 +54,6 @@ body {
   font-size: 40px;
   color: white;
   font-weight: bold;
-  text-align: center;
   z-index: 20;
 }
 
@@ -87,13 +85,16 @@ body {
   position: absolute;
   right: 20px;
   bottom: 20px;
-  transform: translateY(0);
   padding: 20px;
   border-radius: 50%;
   font-size: 20px;
   background: rgba(255,0,0,0.6);
   color: white;
   border: none;
+  display: none;
+  z-index: 20;
+}
+
   display: none;
   z-index: 20;
 }
