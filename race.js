@@ -18,8 +18,8 @@ let dogSpeed = 8;
 // スクロール速度
 let trackSpeed = 9;
 
-// ★★★★★ スクロール停止位置（変更：-105 → -80）★★★★★
-const STOP_OFFSET = -80;
+// ★★★★★ スクロール停止位置（今回は -60 に調整）★★★★★
+const STOP_OFFSET = -60;
 
 let backgroundStopped = false;
 
@@ -59,7 +59,7 @@ tapButton.addEventListener("click", () => {
   checkGoal();
 });
 
-// ---------------- タイマー ----------------
+// ---------------- タイマー（正確版） ----------------
 let time = 0;
 let timerRunning = false;
 let lastTime = null;
@@ -83,7 +83,7 @@ function tickTimer() {
 }
 requestAnimationFrame(tickTimer);
 
-// ---------------- Restart ----------------
+// ---------------- Restart ボタン ----------------
 const restartButton = document.getElementById("restartButton");
 
 // ---------------- ゴール判定 ----------------
