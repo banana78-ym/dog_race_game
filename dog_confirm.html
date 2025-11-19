@@ -1,69 +1,25 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<title>Confirm Your Dog</title>
-
-<!-- ★ 横画面固定のCSS -->
-<link rel="stylesheet" href="orientation.css">
-
-<style>
-  body {
-    margin: 0;
-    background: #f0f0f0;
-    text-align: center;
-  }
-  h1 {
-    margin-top: 20px;
-    font-family: sans-serif;
-  }
-  img {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    margin-top: 20px;
-    border-radius: 10px;
-  }
-  button {
-    font-size: 18px;
-    padding: 10px 20px;
-    margin: 10px;
-  }
-</style>
-</head>
-<body>
-
-<div id="rotateWarning">スマホを横向きにしてください</div>
-
-<h1>Confirm Your Dog</h1>
-
-<img id="dogImage">
-<p id="dogName"></p>
-
-<button id="backBtn">Back</button>
-<button id="startBtn">Game Start</button>
+<img id="dogImage" src="" alt="Selected Dog">
 
 <script>
-const img = document.getElementById("dogImage");
-const nameBox = document.getElementById("dogName");
+const dogImage = document.getElementById('dogImage');
+const dogNameText = document.getElementById('dogName');
 
-const dog = localStorage.getItem("selectedDog");
-const name = localStorage.getItem("dogName");
+const selectedDog = localStorage.getItem("selectedDog");
+const dogName = localStorage.getItem("dogName");
 
-if (!dog) location.href = "dog_select.html";
+if(!selectedDog || !dogName){
+  window.location.href = "dog_select.html";
+} else {
+  // ★ ファイル名は localStorage のものをそのまま使う
+  dogImage.src = `dogs/${selectedDog}`;
+  dogNameText.textContent = dogName;
+}
 
-img.src = "dogs/" + dog;
-nameBox.textContent = name;
+document.getElementById('backBtn').addEventListener('click', () => {
+  window.location.href = "dog_select.html";
+});
 
-document.getElementById("backBtn").onclick = () => {
-  location.href = "dog_select.html";
-};
-
-document.getElementById("startBtn").onclick = () => {
-  location.href = "race.html";
-};
+document.getElementById('startBtn').addEventListener('click', () => {
+  window.location.href = "race.html";
+});
 </script>
-
-</body>
-</html>
