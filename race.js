@@ -29,8 +29,8 @@ function updateTrackMetrics() {
     trackWidth = track.clientWidth || track.naturalWidth;
     containerWidth = raceContainer.clientWidth;
 
-    // 🔥 少しだけ遅く止める（-50px）
-    stopPosition = containerWidth - trackWidth - 50;
+    // 🔥 “あとちょっと” 遅く止める（-65px）
+    stopPosition = containerWidth - trackWidth - 65;
 }
 
 if (track.complete) updateTrackMetrics();
@@ -62,7 +62,7 @@ tapButton.addEventListener("click", () => {
 
         if (trackX <= stopPosition) {
             trackX = stopPosition;
-            backgroundStopped = true;
+            backgroundStopped = true;  // ここからは犬だけ動く
         }
 
         track.style.left = trackX + "px";
@@ -72,7 +72,7 @@ tapButton.addEventListener("click", () => {
 });
 
 // ==========================
-//  タイマー（本物の時間）
+//  タイマー（本物の経過時間）
 // ==========================
 let time = 0;
 let timerRunning = false;
@@ -101,7 +101,7 @@ function checkGoal() {
 }
 
 // ==========================
-// Tap to Start
+// Tap to Start（カウントダウン）
 // ==========================
 const countdown = document.getElementById("countdown");
 let screenTapped = false;
@@ -142,4 +142,3 @@ function startCountdown() {
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
 raceContainer.addEventListener("click", startCountdown);
-
