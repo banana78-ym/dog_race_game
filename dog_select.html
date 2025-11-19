@@ -2,100 +2,133 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Select Your Dog</title>
+
 <style>
   body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
     background: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  h1 {
+    font-family: sans-serif;
     text-align: center;
-    margin-top: 20px;
   }
+
+  h1 {
+    margin-top: 20px;
+    font-size: 32px;
+  }
+
   .dog-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 12px;
+    margin: 20px auto;
+    max-width: 95%;
   }
+
   .dog-grid img {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     object-fit: cover;
-    border: 2px solid transparent;
-    border-radius: 8px;
+    border: 3px solid transparent;
+    border-radius: 10px;
     cursor: pointer;
-    transition: border 0.2s;
+    background: white;
   }
+
   .dog-grid img.selected {
-    border: 3px solid red;
+    border-color: red;
   }
+
   .name-next {
-    margin-top: 20px;
+    margin-top: 25px;
     display: flex;
+    justify-content: center;
     gap: 10px;
-    align-items: center;
   }
-  input[type="text"] {
-    padding: 5px;
-    font-size: 16px;
+
+  input {
+    padding: 10px;
+    font-size: 18px;
+    width: 160px;
   }
+
   button {
-    padding: 5px 10px;
-    font-size: 16px;
+    padding: 10px 18px;
+    font-size: 18px;
+    background: dodgerblue;
+    border: none;
+    border-radius: 8px;
+    color: white;
     cursor: pointer;
+  }
+
+  /* 横向き強制（スマホでも横向き推奨） */
+  @media screen and (orientation: portrait) {
+    body::before {
+      content: "画面を横向きにしてください。";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 26px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 999;
+    }
   }
 </style>
 </head>
 <body>
+
 <h1>Select Your Dog</h1>
 
 <div class="dog-grid" id="dogGrid"></div>
 
 <div class="name-next">
-  <input type="text" id="dogName" placeholder="Enter Name">
+  <input id="dogName" type="text" placeholder="Enter Name">
   <button id="nextBtn">Next</button>
 </div>
 
 <script>
-const dogGrid = document.getElementById('dogGrid');
-const nextBtn = document.getElementById('nextBtn');
+const dogGrid = document.getElementById("dogGrid");
+const nextBtn = document.getElementById("nextBtn");
 let selectedDog = null;
 
-// ★ 新しいファイル名に変更済み ★
+// ★ 新しい画像ファイル名
 const dogs = [
-  ["dog1(2).png","dog2(2).png","dog3(2).png","dog4(2).png"],
-  ["dog5(2).png","dog6(2).png","dog7(2).png","dog8(2).png"],
-  ["dog9(2).png","dog10(2).png","dog11(2).png"]
+  "dog1 (2).png","dog2 (2).png","dog3 (2).png","dog4 (2).png",
+  "dog5 (2).png","dog6 (2).png","dog7 (2).png","dog8 (2).png",
+  "dog9 (2).png","dog10 (2).png","dog11 (2).png"
 ];
 
-dogs.forEach(row => {
-  row.forEach(dog => {
-    const img = document.createElement('img');
-    img.src = `dogs/${dog}`;
-    img.addEventListener('click', () => {
-      document.querySelectorAll('.dog-grid img').forEach(i => i.classList.remove('selected'));
-      img.classList.add('selected');
-      selectedDog = dog;
-    });
-    dogGrid.appendChild(img);
+// グリッドに画像を追加
+dogs.forEach(dog => {
+  const img = document.createElement("img");
+  img.src = `dogs/${dog}`;
+
+  img.addEventListener("click", () => {
+    document.querySelectorAll(".dog-grid img").forEach(i => i.classList.remove("selected"));
+    img.classList.add("selected");
+    selectedDog = dog;
   });
+
+  dogGrid.appendChild(img);
 });
 
-nextBtn.addEventListener('click', () => {
-  const name = document.getElementById('dogName').value.trim();
-  if(!selectedDog) return alert("犬を選んでください");
-  if(!name) return alert("名前を入力してください");
+nextBtn.addEventListener("click", () => {
+  const name = document.getElementById("dogName").value.trim();
+
+  if (!selectedDog) return alert("犬を選んでください");
+  if (!name) return alert("名前を入力してください");
 
   localStorage.setItem("selectedDog", selectedDog);
   localStorage.setItem("dogName", name);
+
   window.location.href = "dog_confirm.html";
 });
 </script>
