@@ -10,23 +10,24 @@ let trackWidth = 0;
 let backgroundStopped = false;
 
 // 犬
-let dogX = 0;            // 左端スタート
-let dogSpeed = 12;       // 犬の走るスピード（調整可）
+let dogX = 0;           
+let dogSpeed = 10;       // ← ここで犬の進む量調整可能（速すぎるなら 8 にする）
 
 // スクロール速度
-let trackSpeed = 9;
+let trackSpeed = 7;
 
-// ★ スクロール停止タイミング調整（ここだけ変えるとスクロール量が変わる）
-const GOAL_MARGIN = -50;   // ← -40 より少し遅く止まる
-
+// 実際に計算される停止位置
 let stopPosition = 0;
 
-// トラック画像読み込み後に幅取得
 track.onload = () => {
+
     trackWidth = track.naturalWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    stopPosition = -(trackWidth - containerWidth) + GOAL_MARGIN;
+    // 画像右端が画面右にピッタリ来る理想の計算式（ズレなし）
+    stopPosition = -(trackWidth - containerWidth);
+
+    console.log("STOP POSITION:", stopPosition);
 };
 
 
@@ -37,17 +38,17 @@ let canTap = false;
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
-    // 犬を前進させる
+    // 犬は常に走る
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
-    // 背景スクロール（ゴールラインが見えるまでは動かす）
+    // 背景は「ゴールラインが見えるまで」スクロール
     if (!backgroundStopped) {
         trackX -= trackSpeed;
 
         if (trackX <= stopPosition) {
-            trackX = stopPosition;
-            backgroundStopped = true; // ← ここからは背景止まる
+            trackX = stopPosition;     // ← 正確に停止位置で止まる
+            backgroundStopped = true;  // ← ここからは犬だけ動く
         }
 
         track.style.left = trackX + "px";
@@ -69,12 +70,15 @@ setInterval(() => {
 }, 10);
 
 
-// ---------------- ゴール判定（犬の位置で判定） ----------------
+// ---------------- ゴール判定 ----------------
 function checkGoal() {
+
     const dogRight = dogX + dog.clientWidth;
     const containerWidth = document.getElementById("raceContainer").clientWidth;
 
-    if (backgroundStopped && dogRight >= containerWidth - 20) {
+    // ゴールラインが見えている（= backgroundStopped が true）
+    // 犬が画面右ギリギリに触れたら GOAL
+    if (backgroundStopped && dogRight >= containerWidth - 15) {
         timerRunning = false;
         canTap = false;
         alert("GOAL!! Time: " + time.toFixed(2) + " s");
