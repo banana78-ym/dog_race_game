@@ -4,41 +4,25 @@
   <meta charset="UTF-8">
   <title>Dog Race</title>
   <link rel="stylesheet" href="race.css">
-  <link rel="stylesheet" href="orientation.css">
-
-  <!-- iPhone 100vh バグ修正 -->
-  <script>
-    function fixHeight() {
-      document.documentElement.style.setProperty("--real-vh", window.innerHeight * 0.01 + "px");
-    }
-    window.addEventListener("resize", fixHeight);
-    fixHeight();
-  </script>
 </head>
-
 <body>
 
 <div id="raceContainer">
-  <!-- トラック -->
   <img id="track" src="track/track_background.png">
-  
-  <!-- 犬 -->
   <img id="dog" src="">
 
-  <!-- グレーオーバーレイ（Tap to Start）-->
   <div id="overlay">
     <div id="tapText">Tap to Start</div>
   </div>
 
-  <!-- カウントダウン -->
   <div id="countdown">3</div>
-
-  <!-- タイマー -->
   <div id="timer">0.00 s</div>
-
-  <!-- TAPボタン -->
   <button id="tapButton">TAP</button>
 </div>
+
+<script src="race.js"></script>
+</body>
+</html>
 
 <script src="race.js"></script>
 </body>
