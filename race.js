@@ -5,44 +5,48 @@ dog.src = "dogs/" + selectedDog;
 
 // ---------------- トラック設定 ----------------
 const track = document.getElementById("track");
-const raceContainer = document.getElementById("raceContainer");
-
 let trackX = 0;
 let trackWidth = 0;
 
-// 犬
+// 犬（左端スタート）
 let dogX = 0;
-let dogSpeed = 9;   // ← 少し遅くした（あなたの希望）
+let dogSpeed = 10;   // ← 走るスピード（あとで調整OK）
 
 // スクロール速度
 let trackSpeed = 9;
 
-// ★ 完璧だった停止位置（絶対変更しない）
+// ★★★★★ スクロール停止位置（絶対に変えない）★★★★★
 const STOP_OFFSET = -105;
 
-// ★ ゴール判定位置（あなたが希望した値）
-const GOAL_OFFSET = -40;
+// ★ ゴール判定を手前にする（本番調整用）
+const GOAL_OFFSET = -60;
 
+// 計算される停止位置
 let stopPosition = 0;
-let backgroundStopped = false;
 
+// トラック画像読み込み後
 track.onload = () => {
-    const containerWidth = raceContainer.clientWidth;
     trackWidth = track.naturalWidth;
+    const containerWidth = document.getElementById("raceContainer").clientWidth;
 
+    // 完璧だったスクロール停止計算
     stopPosition = -(trackWidth - containerWidth) + STOP_OFFSET;
 };
+
 
 // ---------------- TAPボタン ----------------
 const tapButton = document.getElementById("tapButton");
 let canTap = false;
+let backgroundStopped = false;
 
 tapButton.addEventListener("click", () => {
     if (!canTap) return;
 
+    // 犬は右に動き続ける（スクロール停止後も）
     dogX += dogSpeed;
     dog.style.left = dogX + "px";
 
+    // 背景スクロール（停止位置まで）
     if (!backgroundStopped) {
         trackX -= trackSpeed;
 
@@ -57,40 +61,36 @@ tapButton.addEventListener("click", () => {
     checkGoal();
 });
 
+
 // ---------------- タイマー ----------------
 let time = 0;
 let timerRunning = false;
 
 setInterval(() => {
     if (timerRunning) {
-        time += 0.01;
+        time += 0.01; // 正しい1/100秒
         document.getElementById("timer").textContent = time.toFixed(2) + " s";
     }
 }, 10);
 
+
 // ---------------- ゴール判定 ----------------
 function checkGoal() {
     const dogRight = dogX + dog.clientWidth;
-    const containerWidth = raceContainer.clientWidth;
+    const containerWidth = document.getElementById("raceContainer").clientWidth;
 
+    // ゴール判定ライン（少し手前）
     const goalLine = containerWidth + GOAL_OFFSET;
 
     if (backgroundStopped && dogRight >= goalLine) {
         timerRunning = false;
         canTap = false;
-
         alert("GOAL!! Time: " + time.toFixed(2) + " s");
-
-        document.getElementById("restartButton").style.display = "block";
     }
 }
 
-// ---------------- RESTART ----------------
-document.getElementById("restartButton").addEventListener("click", () => {
-    location.reload();
-});
 
-// ---------------- Tap to Start ----------------
+// ---------------- Tap to Start カウントダウン ----------------
 const countdown = document.getElementById("countdown");
 let screenTapped = false;
 
@@ -98,6 +98,7 @@ function startCountdown() {
     if (screenTapped) return;
     screenTapped = true;
 
+    // グレー画面消す
     document.getElementById("overlay").style.display = "none";
 
     countdown.style.display = "block";
@@ -125,4 +126,3 @@ function startCountdown() {
 
 document.getElementById("overlay").addEventListener("click", startCountdown);
 document.getElementById("raceContainer").addEventListener("click", startCountdown);
-
