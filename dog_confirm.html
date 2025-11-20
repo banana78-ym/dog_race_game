@@ -53,23 +53,6 @@
   #backBtn {
     background: gray;
   }
-
-  /* 横画面強制（スマホで縦だと注意表示） */
-  @media screen and (orientation: portrait) {
-    body::before {
-      content: "画面を横向きにしてください。";
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.8);
-      color: white;
-      padding: 20px;
-      font-size: 26px;
-      border-radius: 10px;
-      z-index: 1000;
-    }
-  }
 </style>
 </head>
 
@@ -94,16 +77,14 @@ const dogNameText = document.getElementById("dogName");
 const selectedDog = localStorage.getItem("selectedDog");
 const dogName = localStorage.getItem("dogName");
 
-// データがなければ戻す
 if (!selectedDog || !dogName) {
   window.location.href = "dog_select.html";
 } else {
-  // ★ 新しい画像名にも対応（localStorage の値をそのまま使用）
+  // ★ 正しいファイル名で表示
   dogImage.src = `dogs/${selectedDog}`;
   dogNameText.textContent = dogName;
 }
 
-// ボタン動作
 document.getElementById("backBtn").addEventListener("click", () => {
   window.location.href = "dog_select.html";
 });
