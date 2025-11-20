@@ -1,25 +1,117 @@
-<img id="dogImage" src="" alt="Selected Dog">
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Confirm Your Dog</title>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f0f0f0;
+    font-family: sans-serif;
+    text-align: center;
+  }
+
+  h1 {
+    margin-top: 20px;
+    font-size: 32px;
+  }
+
+  .dog-preview img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 20px;
+  }
+
+  .dog-name {
+    margin-top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .buttons {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  button {
+    padding: 12px 26px;
+    font-size: 20px;
+    border: none;
+    background: dodgerblue;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  #backBtn {
+    background: gray;
+  }
+
+  /* 横画面強制（スマホで縦だと注意表示） */
+  @media screen and (orientation: portrait) {
+    body::before {
+      content: "画面を横向きにしてください。";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 20px;
+      font-size: 26px;
+      border-radius: 10px;
+      z-index: 1000;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Confirm Your Dog</h1>
+
+<div class="dog-preview">
+  <img id="dogImage" src="" alt="Selected Dog">
+  <div id="dogName" class="dog-name"></div>
+</div>
+
+<div class="buttons">
+  <button id="backBtn">Back</button>
+  <button id="startBtn">Game Start</button>
+</div>
 
 <script>
-const dogImage = document.getElementById('dogImage');
-const dogNameText = document.getElementById('dogName');
+const dogImage = document.getElementById("dogImage");
+const dogNameText = document.getElementById("dogName");
 
 const selectedDog = localStorage.getItem("selectedDog");
 const dogName = localStorage.getItem("dogName");
 
-if(!selectedDog || !dogName){
+// データがなければ戻す
+if (!selectedDog || !dogName) {
   window.location.href = "dog_select.html";
 } else {
-  // ★ ファイル名は localStorage のものをそのまま使う
+  // ★ 新しい画像名にも対応（localStorage の値をそのまま使用）
   dogImage.src = `dogs/${selectedDog}`;
   dogNameText.textContent = dogName;
 }
 
-document.getElementById('backBtn').addEventListener('click', () => {
+// ボタン動作
+document.getElementById("backBtn").addEventListener("click", () => {
   window.location.href = "dog_select.html";
 });
 
-document.getElementById('startBtn').addEventListener('click', () => {
+document.getElementById("startBtn").addEventListener("click", () => {
   window.location.href = "race.html";
 });
 </script>
+
+</body>
+</html>
